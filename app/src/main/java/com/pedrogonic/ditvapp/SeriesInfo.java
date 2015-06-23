@@ -32,11 +32,10 @@ public class SeriesInfo extends ActionBarActivity {
     Document mainDoc;
     ProgressDialog progress;
     Context context = this;
-    ArrayList<String> episodeName;
-    ArrayList<String>episodeId;
-    ArrayList<String> season;
+    ArrayList<String> headers;
 
-    List<String> listDataHeader;
+    Series series = new Series();
+
     HashMap<String, List<String>> listDataChild;
     ExpandableListAdapter expAdapter;
 
@@ -69,54 +68,20 @@ public class SeriesInfo extends ActionBarActivity {
 
             NodeList nodeList = mainDoc.getElementsByTagName("ns:return");
 
-            episodeId = new ArrayList();
-            episodeName = new ArrayList<String>();
-            season = new ArrayList<String>();
-            Log.v("result", "==== " + nodeList.getLength());
             for (int i = 0; i < nodeList.getLength(); i +=3) {
-                episodeId.add(nodeList.item(i).getChildNodes().item(0).getNodeValue());
-                episodeName.add(nodeList.item(i+1).getChildNodes().item(0).getNodeValue());
-                season.add(nodeList.item(i+2).getChildNodes().item(0).getNodeValue());
+                Episode ep = new Episode();
+                ep.setId(Integer.parseInt(nodeList.item(i).getChildNodes().item(0).getNodeValue()));
+                ep.setName(nodeList.item(i+1).getChildNodes().item(0).getNodeValue());
+
+                String seasonName = nodeList.item(i+2).getChildNodes().item(0).getNodeValue();
+
+                series.addEpisode(ep,seasonName);
             }
-            Log.v("season","=== season");
 
         } catch (Exception e) {
             Log.v("exception", "==== "+e.getMessage());
         }
     }
-
-/*    void task2(String str) {
-
-        //Uncomment one of these:
-        //Test in emulator:
-        //String urlStr = "http://10.0.2.2:8080/
-        //Test in a device in the same Wi-Fi (ifconfig):
-        String urlStr = "http://192.168.1.191:8080/";
-        //Test in a device that's sharing hotspot:
-        //String urlStr = "http://192.168.43.73:8080/
-        //Cloud Web Service:
-        //String urlStr = "http://???/
-
-        urlStr += "axis2/services/diTVWs/getSeasons?seriesId=" + str;
-
-        try {
-            mainDoc = HttpHelper.getXMLFromWeb(urlStr);
-
-            NodeList nodeList = mainDoc.getElementsByTagName("ns:return");
-
-            ids = new ArrayList();
-
-            result = new ArrayList<String>();
-            Log.v("result", "==== " + nodeList.getLength());
-            for (int i = 0; i < nodeList.getLength(); i +=2) {
-                ids.add(nodeList.item(i).getChildNodes().item(0).getNodeValue());
-                result.add(nodeList.item(i+1).getChildNodes().item(0).getNodeValue());
-            }
-
-        } catch (Exception e) {
-            Log.v("exception", "==== "+e.getMessage());
-        }
-    }*/
 
     public void showEpisodes(final LinearLayout myLayout,final String seriesId) {
         final ListView listView = new ListView(this);
@@ -142,21 +107,11 @@ public class SeriesInfo extends ActionBarActivity {
                     @Override
                     public void run() {
 
-                        //Log.v("place", "==== "+season.size());
+                        listDataChild = series.createHashMap();
 
-                        listDataHeader = new ArrayList<String>();
-                        for (int c = 0 ; c < season.size(); c++)
-                            listDataHeader.add(season.get(c));
-                        listDataChild = new HashMap<String, List<String>>();
+                        headers = series.getSeasonsNames();
 
-                        ArrayList ar = new ArrayList();
-                        ar.add("ep1");
-                        ar.add("ep2");
-
-                        for (int c = 0 ; c < season.size(); c++)
-                            listDataChild.put(season.get(c),ar);
-
-                        expAdapter = new ExpandableListAdapter(context, season, listDataChild);
+                        expAdapter = new ExpandableListAdapter(context, headers, listDataChild);
 
                         expListView.setAdapter(expAdapter);
 
