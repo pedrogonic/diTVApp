@@ -39,21 +39,40 @@ public class SeriesInfo extends ActionBarActivity {
     HashMap<String, List<String>> listDataChild;
     ExpandableListAdapter expAdapter;
 
+    String seriesId;
+    String seriesName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_info);
         //setContentView(R.layout.my_layout);
 
+        final TextView seriesNameView = (TextView)findViewById(R.id.seriesName);
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
         if(bundle != null) {
-            String seriesId = bundle.getString("id");
+            seriesId = bundle.getString("id");
+            seriesName = bundle.getString("name");
+
+            seriesNameView.setText(seriesName);
 
             LinearLayout myLayout = (LinearLayout)findViewById(R.id.main);
 
             showEpisodes(myLayout,seriesId);
+
+            //delete it!!!
+//            series.setId(123);
+//            series.setName("Game of Thrones");
+//            series.setAirsDayOfWeek("Sunday");
+//            series.setAirsTime("10:00");
+//            series.setNetwork("HBO");
+//            series.setRating(5);
+//
+//            DBHelper db = new DBHelper(getApplicationContext());
+//            db.addSeries(series);
         }
     }
 
@@ -68,12 +87,16 @@ public class SeriesInfo extends ActionBarActivity {
 
             NodeList nodeList = mainDoc.getElementsByTagName("ns:return");
 
-            for (int i = 0; i < nodeList.getLength(); i +=3) {
+            for (int i = 0; i < nodeList.getLength(); i +=6) {
                 Episode ep = new Episode();
                 ep.setId(Integer.parseInt(nodeList.item(i).getChildNodes().item(0).getNodeValue()));
                 ep.setName(nodeList.item(i+1).getChildNodes().item(0).getNodeValue());
-
-                String seasonName = nodeList.item(i+2).getChildNodes().item(0).getNodeValue();
+                ep.setNumber(Integer.parseInt(nodeList.item(i+2).getChildNodes().item(0).getNodeValue()));
+                ep.setFirstAired(nodeList.item(i+3).getChildNodes().item(0).getNodeValue());
+                ep.setSeason(Integer.parseInt(nodeList.item(i+4).getChildNodes().item(0).getNodeValue()));
+                ep.setAbsoluteNumber(Integer.parseInt(nodeList.item(i+5).getChildNodes().item(0).getNodeValue()));
+                ep.setSeries_id(Integer.parseInt(seriesId));
+                String seasonName = nodeList.item(i+4).getChildNodes().item(0).getNodeValue();
 
                 series.addEpisode(ep,seasonName);
             }
@@ -124,6 +147,60 @@ public class SeriesInfo extends ActionBarActivity {
         }).start();
     }
 
+    void task2(String str) {
+        String urlStr = "axis2/services/diTVWs/getSeries?id=" + str;
+
+        urlStr = version.getWSUrl(urlStr);
+
+        try {
+            mainDoc = HttpHelper.getXMLFromWeb(urlStr);
+
+            NodeList nodeList = mainDoc.getElementsByTagName("ns:return");
+
+            series.setId(Integer.parseInt(nodeList.item(0).getChildNodes().item(0).getNodeValue()));
+            series.setName(nodeList.item(1).getChildNodes().item(0).getNodeValue());
+            series.setAirsDayOfWeek(nodeList.item(2).getChildNodes().item(0).getNodeValue());
+            series.setAirsTime(nodeList.item(3).getChildNodes().item(0).getNodeValue());
+            series.setNetwork(nodeList.item(4).getChildNodes().item(0).getNodeValue());
+            series.setRating(Integer.parseInt(nodeList.item(5).getChildNodes().item(0).getNodeValue()));
+
+        } catch (Exception e) {
+            Log.v("exception", "==== "+e.getMessage());
+        }
+    }
+
+    public void saveSeriesInfo(final String seriesId) {
+        progress = new ProgressDialog(context);
+        progress.setMessage("Saving Favorite");
+        progress.setTitle("wait");
+        // progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setCancelable(true);
+        progress.setProgress(0);
+        progress.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                task2(seriesId);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        DBHelper db = new DBHelper(getApplicationContext());
+                        db.addSeries(series);
+                        db.close();
+                        progress.dismiss();
+                    }
+                });
+            }
+        }).start();
+    }
+
+
+    public void favorite(View view) {
+        saveSeriesInfo(seriesId);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -108,6 +108,7 @@ public class SearchActivity extends ActionBarActivity {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 Intent intent = new Intent(context, SeriesInfo.class);
                                 intent.putExtra("id",ids.get(position));
+                                intent.putExtra("name",result.get(position));
                                 startActivity(intent);
                             }
                         });

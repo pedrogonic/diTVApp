@@ -10,6 +10,13 @@ import java.util.List;
 public class Series {
     private ArrayList<Season> series;
 
+    private int id;
+    private String name;
+    private String airsDayOfWeek;
+    private String airsTime;
+    private String network;
+    private int rating;
+
     public Series() {
         this.series = new ArrayList();
     }
@@ -47,5 +54,64 @@ public class Series {
                 return true;
         }
         return false;
+    }
+
+    public ArrayList<Episode> getEpisodes() {
+        ArrayList res = new ArrayList();
+
+        for (Season s : series) {
+            ArrayList<Episode> episodes = s.getEpisodes();
+            for (Episode e : episodes)
+                res.add(e);
+        }
+        return res;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAirsDayOfWeek() {
+        return airsDayOfWeek;
+    }
+
+    public void setAirsDayOfWeek(String airsDayOfWeek) {
+        this.airsDayOfWeek = airsDayOfWeek;
+    }
+
+    public String getAirsTime() {
+        return airsTime;
+    }
+
+    public void setAirsTime(String airsTime) {
+        this.airsTime = airsTime;
+    }
+
+    public String getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(String network) {
+        this.network = network;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }
