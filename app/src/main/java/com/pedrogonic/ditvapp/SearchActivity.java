@@ -43,6 +43,7 @@ public class SearchActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+
     }
 
 
@@ -138,7 +139,13 @@ public class SearchActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_search) {
+            return true;
+        }
+
+        if (id == R.id.menu_favorites) {
+            Intent intent = new Intent(context, ListFavoriteActivity.class);
+            startActivity(intent);
             return true;
         }
 

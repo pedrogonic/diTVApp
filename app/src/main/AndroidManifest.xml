@@ -30,6 +30,10 @@
             android:name=".FavoriteActivity"
             android:label="@string/title_activity_favorite" >
         </activity>
+        <activity
+            android:name=".ListFavoriteActivity"
+            android:label="@string/title_activity_list_favorite" >
+        </activity>
     </application>
 
 </manifest>

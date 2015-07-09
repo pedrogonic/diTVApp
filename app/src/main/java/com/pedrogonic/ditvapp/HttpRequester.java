@@ -79,17 +79,14 @@ public class HttpRequester {
 			Log.i("httpRequester", "doc set");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			Log.i("Debug", "Failed - OpenHttpConnection");
 			Log.i("httpRequester", "Failed - OpenHttpConnection");
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			Log.i("Debug", "Failed - DocumentBuilderFactory");
 			Log.i("httpRequester", "Failed - DocumentBuilderFactory");
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			Log.i("Debug", "Failed - parse");
 			Log.i("httpRequester", "Failed - parse");
 			e.printStackTrace();

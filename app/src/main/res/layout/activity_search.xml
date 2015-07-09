@@ -12,8 +12,8 @@
         android:text="Search"
         android:id="@+id/searchBtn"
         android:onClick="doSearch"
-        android:layout_marginTop="40dp"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="55dp"
+        android:layout_below="@+id/searchStr"
         android:layout_centerHorizontal="true" />
 
     <EditText
