@@ -62,17 +62,6 @@ public class SeriesInfo extends ActionBarActivity {
             LinearLayout myLayout = (LinearLayout)findViewById(R.id.main);
 
             showEpisodes(myLayout,seriesId);
-
-            //delete it!!!
-//            series.setId(123);
-//            series.setName("Game of Thrones");
-//            series.setAirsDayOfWeek("Sunday");
-//            series.setAirsTime("10:00");
-//            series.setNetwork("HBO");
-//            series.setRating(5);
-//
-//            DBHelper db = new DBHelper(getApplicationContext());
-//            db.addSeries(series);
         }
     }
 
@@ -107,10 +96,7 @@ public class SeriesInfo extends ActionBarActivity {
     }
 
     public void showEpisodes(final LinearLayout myLayout,final String seriesId) {
-        final ListView listView = new ListView(this);
-
         final ExpandableListView expListView = new ExpandableListView(this);
-
 
         progress = new ProgressDialog(context);
         progress.setMessage("accessing the cloud");
@@ -191,6 +177,11 @@ public class SeriesInfo extends ActionBarActivity {
                         db.addSeries(series);
                         db.close();
                         progress.dismiss();
+
+                        Intent intent = new Intent(context, FavoriteActivity.class);
+                        intent.putExtra("seriesId",seriesId);
+                        intent.putExtra("seriesName",seriesName);
+                        startActivity(intent);
                     }
                 });
             }

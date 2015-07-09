@@ -2,6 +2,7 @@ package com.pedrogonic.ditvapp;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -96,5 +97,30 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         return true;
+    }
+
+    public Series getSeriesEpisodes(int seriesId) {
+        Series series = new Series();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from "+EPISODE_TABLE+" where "+EPISODE_COLUMN_SERIES_ID+" = ?",new String[] {Integer.toString(seriesId)});
+        c.moveToFirst();
+        while(c.isAfterLast() == false) {
+            Episode episode = new Episode();
+
+            episode.setSeries_id(seriesId);
+            episode.setId(c.getInt(c.getColumnIndex(EPISODE_COLUMN_ID)));
+            episode.setName(c.getString(c.getColumnIndex(EPISODE_COLUMN_NAME)));
+            episode.setNumber(c.getInt(c.getColumnIndex(EPISODE_COLUMN_NUMBER)));
+            episode.setFirstAired(c.getString(c.getColumnIndex(EPISODE_COLUMN_FIRSTAIRED)));
+            episode.setSeason(c.getInt(c.getColumnIndex(EPISODE_COLUMN_SEASONNUMBER)));
+            episode.setAbsoluteNumber(c.getInt(c.getColumnIndex(EPISODE_COLUMN_ABSOLUTE_NUMBER)));
+
+            series.addEpisode(episode,Integer.toString(c.getInt(c.getColumnIndex(EPISODE_COLUMN_SEASONNUMBER))));
+
+            c.moveToNext();
+        }
+
+        return series;
     }
 }
