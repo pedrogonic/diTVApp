@@ -49,7 +49,6 @@ public class FavoriteActivity extends ActionBarActivity {
 
         DBHelper db = new DBHelper(context);
         series = db.getSeriesEpisodes(Integer.parseInt(seriesId));
-        db.close();
 
         listDataChild = series.createHashMap();
         headers = series.getSeasonsNames();

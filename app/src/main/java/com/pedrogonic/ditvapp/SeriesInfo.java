@@ -175,7 +175,6 @@ public class SeriesInfo extends ActionBarActivity {
                     public void run() {
                         DBHelper db = new DBHelper(getApplicationContext());
                         db.addSeries(series);
-                        db.close();
                         progress.dismiss();
 
                         Intent intent = new Intent(context, FavoriteActivity.class);

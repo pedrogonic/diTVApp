@@ -5,6 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_series_info">Series Information</string>
     <string name="title_activity_search">Search Series</string>
-    <string name="title_activity_favorite">Series Information</string>
+    <string name="title_activity_favorite">Favorite Series Information</string>
     <string name="title_activity_list_favorite">Your Favorites</string>
 </resources>

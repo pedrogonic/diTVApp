@@ -64,11 +64,6 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void close() {
-        if(this.db != null)
-            db.close();
-    }
-
     public boolean addSeries(Series series) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -96,7 +91,32 @@ public class DBHelper extends SQLiteOpenHelper {
             db.insert(EPISODE_TABLE,null,contentValues);
         }
 
+        db.close();
+
         return true;
+    }
+
+    public ArrayList<Series> getFavoriteSeries() {
+        ArrayList<Series> seriesList = new ArrayList<Series>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c =db.rawQuery("select * from "+SERIES_TABLE,null);
+        c.moveToFirst();
+        while(c.isAfterLast() == false) {
+            Series series = new Series();
+
+            series.setId(c.getInt(c.getColumnIndex(SERIES_COLUMN_ID)));
+            series.setName(c.getString(c.getColumnIndex(SERIES_COLUMN_NAME)));
+
+            seriesList.add(series);
+
+            c.moveToNext();
+        }
+
+        db.close();
+        c.close();
+
+        return seriesList;
     }
 
     public Series getSeriesEpisodes(int seriesId) {
@@ -120,6 +140,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
             c.moveToNext();
         }
+
+        db.close();
+        c.close();
 
         return series;
     }
