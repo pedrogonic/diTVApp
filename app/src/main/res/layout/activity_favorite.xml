@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="Delete"
         android:id="@+id/btnDelete"
-        android:onClick=""
+        android:onClick="unfavorite"
         android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/main" />
 

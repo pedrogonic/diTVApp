@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,6 +59,14 @@ public class FavoriteActivity extends ActionBarActivity {
         LinearLayout myLayout = (LinearLayout)findViewById(R.id.main);
 
         myLayout.addView(expListView);
+    }
+
+    public void unfavorite(View view) {
+        DBHelper db = new DBHelper(context);
+        if(db.removeSeries(seriesId)) {
+            Intent intent = new Intent(context, ListFavoriteActivity.class);
+            startActivity(intent);
+        }
     }
 
 

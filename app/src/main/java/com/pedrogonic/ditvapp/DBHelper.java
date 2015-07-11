@@ -96,6 +96,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean removeSeries(String seriesId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //DELETE ALERTS!
+        db.delete(EPISODE_TABLE,EPISODE_COLUMN_SERIES_ID+" = "+seriesId,null);
+        db.delete(SERIES_TABLE,SERIES_COLUMN_ID+" = "+ seriesId,null);
+
+        db.close();
+
+        return true;
+    }
+
     public ArrayList<Series> getFavoriteSeries() {
         ArrayList<Series> seriesList = new ArrayList<Series>();
 
