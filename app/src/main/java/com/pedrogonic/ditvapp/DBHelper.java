@@ -158,4 +158,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return series;
     }
+
+    public boolean isFavorite(String seriesId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from "+SERIES_TABLE+" where "+SERIES_COLUMN_ID+" = ?",new String[] {seriesId});
+        if(c.getCount() > 0)
+            return true;
+        else
+            return false;
+    }
 }

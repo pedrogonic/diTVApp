@@ -42,6 +42,8 @@ public class SeriesInfo extends ActionBarActivity {
     String seriesId;
     String seriesName;
 
+    boolean alreadyFavorite = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,13 @@ public class SeriesInfo extends ActionBarActivity {
 
             LinearLayout myLayout = (LinearLayout)findViewById(R.id.main);
 
+            DBHelper db = new DBHelper(context);
+            if (db.isFavorite(seriesId)){
+                TextView btn = (TextView)findViewById(R.id.btnFav);
+                btn.setText("Favorited");
+                alreadyFavorite = true;
+            }
+
             showEpisodes(myLayout,seriesId);
         }
     }
@@ -79,11 +88,11 @@ public class SeriesInfo extends ActionBarActivity {
             for (int i = 0; i < nodeList.getLength(); i +=6) {
                 Episode ep = new Episode();
                 ep.setId(Integer.parseInt(nodeList.item(i).getChildNodes().item(0).getNodeValue()));
-                ep.setName(nodeList.item(i+1).getChildNodes().item(0).getNodeValue());
-                ep.setNumber(Integer.parseInt(nodeList.item(i+2).getChildNodes().item(0).getNodeValue()));
-                ep.setFirstAired(nodeList.item(i+3).getChildNodes().item(0).getNodeValue());
-                ep.setSeason(Integer.parseInt(nodeList.item(i+4).getChildNodes().item(0).getNodeValue()));
-                ep.setAbsoluteNumber(Integer.parseInt(nodeList.item(i+5).getChildNodes().item(0).getNodeValue()));
+                ep.setName(nodeList.item(i + 1).getChildNodes().item(0).getNodeValue());
+                ep.setNumber(Integer.parseInt(nodeList.item(i + 2).getChildNodes().item(0).getNodeValue()));
+                ep.setFirstAired(nodeList.item(i + 3).getChildNodes().item(0).getNodeValue());
+                ep.setSeason(Integer.parseInt(nodeList.item(i + 4).getChildNodes().item(0).getNodeValue()));
+                ep.setAbsoluteNumber(Integer.parseInt(nodeList.item(i + 5).getChildNodes().item(0).getNodeValue()));
                 ep.setSeries_id(Integer.parseInt(seriesId));
                 String seasonName = nodeList.item(i+4).getChildNodes().item(0).getNodeValue();
 
@@ -189,7 +198,8 @@ public class SeriesInfo extends ActionBarActivity {
 
 
     public void favorite(View view) {
-        saveSeriesInfo(seriesId);
+        if (!alreadyFavorite)
+            saveSeriesInfo(seriesId);
     }
 
     @Override
