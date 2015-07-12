@@ -31,4 +31,7 @@ public class Season {
             names.add(this.season.get(i).getName());
         return names;
     }
+    public Episode getEpisode(int episode) {
+        return season.get(episode);
+    }
 }

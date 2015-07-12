@@ -1,10 +1,12 @@
 package com.pedrogonic.ditvapp;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +61,28 @@ public class FavoriteActivity extends ActionBarActivity {
         LinearLayout myLayout = (LinearLayout)findViewById(R.id.main);
 
         myLayout.addView(expListView);
+
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Episode episode = series.getSelectedEpisode(groupPosition,childPosition);
+                Log.d("EPISODE", "=== " + episode.getName() + " " + Integer.toString(episode.getNumber()) + " " + episode.getFirstAired());
+
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.episode_dialog);
+                dialog.setTitle(episode.getName());
+
+                TextView txt = (TextView)dialog.findViewById(R.id.epNumber);
+                txt.setText(Integer.toString(episode.getNumber()));
+
+                txt = (TextView)dialog.findViewById(R.id.epAirDate);
+                txt.setText(episode.getFirstAired());
+
+                dialog.show();
+
+                return false;
+            }
+        });
     }
 
     public void unfavorite(View view) {

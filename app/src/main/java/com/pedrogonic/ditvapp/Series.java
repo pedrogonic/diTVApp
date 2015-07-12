@@ -67,6 +67,10 @@ public class Series {
         return res;
     }
 
+    public Episode getSelectedEpisode(int season, int episode) {
+        return series.get(season).getEpisode(episode);
+    }
+
     public int getId() {
         return id;
     }

@@ -1,5 +1,6 @@
 package com.pedrogonic.ditvapp;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,6 +136,28 @@ public class SeriesInfo extends ActionBarActivity {
                         expListView.setAdapter(expAdapter);
 
                         myLayout.addView(expListView);
+
+                        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                            @Override
+                            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                                Episode episode = series.getSelectedEpisode(groupPosition,childPosition);
+                                Log.d("EPISODE","=== "+ episode.getName()+" "+Integer.toString(episode.getNumber())+ " "+ episode.getFirstAired());
+
+                                final Dialog dialog = new Dialog(context);
+                                dialog.setContentView(R.layout.episode_dialog);
+                                dialog.setTitle(episode.getName());
+
+                                TextView txt = (TextView)dialog.findViewById(R.id.epNumber);
+                                txt.setText(Integer.toString(episode.getNumber()));
+
+                                txt = (TextView)dialog.findViewById(R.id.epAirDate);
+                                txt.setText(episode.getFirstAired());
+
+                                dialog.show();
+
+                                return false;
+                            }
+                        });
 
                         progress.dismiss();
                     }
